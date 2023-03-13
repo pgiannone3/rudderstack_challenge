@@ -1,4 +1,4 @@
-export async function transformEvent(event) {
+async function transformEvent(event) {
     const country = event.context.traits.address.country;
     const phone = event.context.traits.phone;
 
@@ -13,5 +13,12 @@ export async function transformEvent(event) {
 }
 
 function addInternationalCode(phoneNumber, internationalCode) {
-  return phoneNumber.startsWith(internationalCode) ? phoneNumber : internationalCode + phoneNumber;
+  const formattedPhone = phoneNumber.startsWith("+") ? phoneNumber : `+${phoneNumber}`;
+  if (formattedPhone.startsWith(`+${internationalCode}`)) {
+    return formattedPhone;
+  } else {
+    return `+${internationalCode}${formattedPhone.slice(1)}`;
+  }
 }
+
+module.exports = { transformEvent, addInternationalCode };
